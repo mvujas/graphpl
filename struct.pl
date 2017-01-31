@@ -21,15 +21,19 @@ pop_last([ Head | Struct ], Element, [ Head | Struct1 ]):-
 
 % Push element in ascending order
 push_asc(Element, [], [Element]):- !.
-push_asc(Element, [ Head | Rest ], [ Element, Head | Rest ]):- Element =< Head.
+push_asc(Element, [ Head | Rest ], [ Element, Head | Rest ]):- Element =< Head,
+	!.
 push_asc(Element, [ Head | Rest ], [ Head | Result ]):- Element > Head,
-	push_asc(Element, Rest, Result).
+	push_asc(Element, Rest, Result),
+	!.
 
 % Push element in descending order
 push_desc(Element, [], [Element]):- !.
-push_desc(Element, [ Head | Rest ], [ Element, Head | Rest ]):- Element >= Head.
+push_desc(Element, [ Head | Rest ], [ Element, Head | Rest ]):- Element >= Head,
+	!.
 push_desc(Element, [ Head | Rest ], [ Head | Result ]):- Element < Head,
-	push_desc(Element, Rest, Result).
+	push_desc(Element, Rest, Result),
+	!.
 
 % Check if structure is empty
 empty([]).
