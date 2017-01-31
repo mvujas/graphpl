@@ -1,7 +1,7 @@
 :- writeln(' sruct.pl included successfully.').
 
 % Initialize empty data structure
-init(Struct):- Struct = [].
+init([]).
 
 % Push element at the top of structure
 push_first(Element, Struct, [ Element | Struct ]).
