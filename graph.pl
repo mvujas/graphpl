@@ -77,6 +77,19 @@ push_whole_in_stack([ Head | Rest ], OldStack, NewStack):-
 	push_whole_in_stack(Rest, NewStack1, NewStack),
 	!.
 
+add_on_whole(_, [], []):- !.
+add_on_whole(N, [ [ Node, Cost ] | Rest ], [ [ Node, NewCost ] | NewRest ]):-
+	NewCost is Cost + N,
+	add_on_whole(N, Rest, NewRest),
+	!.
+
+% Push whole list in priority queue
+push_whole_in_pqueue([], OldPQueue, OldPQueue):- !.
+push_whole_in_pqueue([ Head | Rest ], OldPQueue, NewPQueue):-
+	push_asc(Head, OldPQueue, NewPQueue1),
+	push_whole_in_pqueue(Rest, NewPQueue1, NewPQueue),
+	!.
+
 % Depth First Search
 call_dfs(Graph, Start, End):-
 	length(Graph, Length),
@@ -89,13 +102,15 @@ call_dfs(Graph, Start, End):-
 	write(Start), 
 	write(' and '), 
 	write(End), 
-	write(' are connected.')
+	write(' are connected.'),
+	nl
 	);
 	(write('Nodes '), 
 	write(Start), 
 	write(' and '), 
 	write(End), 
-	write(' aren\'t connected.')
+	write(' aren\'t connected.'),
+	nl
 	)).
 dfs(Graph, End, Visited, Stack):-
 	not(empty(Stack)),
@@ -122,13 +137,15 @@ call_bfs(Graph, Start, End):-
 	write(Start), 
 	write(' and '), 
 	write(End), 
-	write(' are connected.')
+	write(' are connected.'),
+	nl
 	);
 	(write('Nodes '), 
 	write(Start), 
 	write(' and '), 
 	write(End), 
-	write(' aren\'t connected.')
+	write(' aren\'t connected.'),
+	nl
 	)).
 bfs(Graph, End, Visited, Stack):-
 	not(empty(Stack)),
@@ -141,4 +158,43 @@ bfs(Graph, End, Visited, Stack):-
 	replace(Node, 1, Visited, Visited1),
 	push_whole_in_stack(NodeNode, Stack1, Stack2),
 	bfs(Graph, End, Visited1, Stack2)
+	)).
+
+% Dijkstra algorithm for shortest path
+call_dijkstra(Graph, Start, End, Distance):- 
+	length(Graph, Length),
+	create_sample(Length, 0, Visited),
+	init(PQueue),
+	nth0(Start, Graph, StartNode),
+	push_whole_in_pqueue(StartNode, PQueue, PQueue1),
+	(dijkstra(Graph, End, Visited, PQueue1, Distance),
+	write('Shortest path between nodes '),
+	write(Start),
+	write(' and '),
+	write(End),
+	write(' is '),
+	write(Distance),
+	nl
+	);
+	(write('Nodes '),
+	write(Start),
+	write(' and '),
+	write(End),
+	write('aren\'t connected'),
+	nl
+	).
+dijkstra(Graph, End, Visited, PQueue, Distance):-
+	not(empty(PQueue)),
+	pop_first(PQueue, [ Node, Cost ], PQueue1),
+	((Node =:= End,
+	Distance is Cost
+	);
+	(is_visited(Node, Visited),
+	dijkstra(Graph, End, Visited, PQueue1, Distance)
+	);
+	(nth0(Node, Graph, NodeNode),
+	replace(Node, 1, Visited, Visited1),
+	add_on_whole(Cost, NodeNode, NodeNode1),
+	push_whole_in_pqueue(NodeNode1, PQueue1, PQueue2),
+	dijkstra(Graph, End, Visited1, PQueue2, Distance)
 	)).
