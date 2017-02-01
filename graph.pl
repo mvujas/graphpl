@@ -84,8 +84,7 @@ call_dfs(Graph, Start, End):-
 	init(Stack),
 	nth0(Start, Graph, StartNode),
 	push_whole_in_stack(StartNode, Stack, Stack1),
-	replace(Start, 1, Visited, Visited1),
-	((dfs(Graph, End, Visited1, Stack1),
+	((dfs(Graph, End, Visited, Stack1),
 	write('Nodes '), 
 	write(Start), 
 	write(' and '), 
@@ -109,4 +108,37 @@ dfs(Graph, End, Visited, Stack):-
 	replace(Node, 1, Visited, Visited1),
 	push_whole_in_stack(NodeNode, Stack1, Stack2),
 	dfs(Graph, End, Visited1, Stack2)
+	)).
+
+% Breadth First Search
+call_bfs(Graph, Start, End):-
+	length(Graph, Length),
+	create_sample(Length, 0, Visited),
+	init(Stack),
+	nth0(Start, Graph, StartNode),
+	push_whole_in_stack(StartNode, Stack, Stack1),
+	((bfs(Graph, End, Visited, Stack1),
+	write('Nodes '), 
+	write(Start), 
+	write(' and '), 
+	write(End), 
+	write(' are connected.')
+	);
+	(write('Nodes '), 
+	write(Start), 
+	write(' and '), 
+	write(End), 
+	write(' aren\'t connected.')
+	)).
+bfs(Graph, End, Visited, Stack):-
+	not(empty(Stack)),
+	pop_last(Stack, [ Node, _ ], Stack1),
+	(Node =:= End;
+	(is_visited(Node, Visited), 
+	bfs(Graph, End, Visited, Stack1)
+	);
+	(nth0(Node, Graph, NodeNode),
+	replace(Node, 1, Visited, Visited1),
+	push_whole_in_stack(NodeNode, Stack1, Stack2),
+	bfs(Graph, End, Visited1, Stack2)
 	)).
