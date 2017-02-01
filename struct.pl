@@ -1,4 +1,4 @@
-:- writeln(' sruct.pl included successfully.').
+:- writeln('Library struct loaded successfully.').
 
 % Initialize empty data structure
 init([]).
@@ -7,9 +7,8 @@ init([]).
 push_first(Element, Struct, [ Element | Struct ]).
 
 % Push element at the bottom of structure
-push_last(Element, [], [ Element ]):- !.
-push_last(Element, [ Head | Rest ], [ Head | Struct ]):-
-	push_last(Element, Rest, Struct).
+push_last(Element, Struct, Result):-
+	append(Struct, [Element], Result).
 
 % Return first element of structure and rest of it
 pop_first([ Element | Struct ], Element, Struct).  
@@ -21,18 +20,22 @@ pop_last([ Head | Struct ], Element, [ Head | Struct1 ]):-
 
 % Push element in ascending order
 push_asc(Element, [], [Element]):- !.
-push_asc(Element, [ Head | Rest ], [ Element, Head | Rest ]):- Element =< Head,
+push_asc([ Edge, Cost ], [ [ Edge1, Cost1 ] | Rest ], [ [ Edge, Cost ], [ Edge1, Cost1 ] | Rest ]):- 
+	Cost =< Cost1,
 	!.
-push_asc(Element, [ Head | Rest ], [ Head | Result ]):- Element > Head,
-	push_asc(Element, Rest, Result),
+push_asc([ Edge, Cost ], [ [ Edge1, Cost1 ] | Rest ], [ [ Edge1, Cost1 ] | Result ]):- 
+	Cost > Cost1,
+	push_asc([ Edge, Cost ], Rest, Result),
 	!.
 
 % Push element in descending order
 push_desc(Element, [], [Element]):- !.
-push_desc(Element, [ Head | Rest ], [ Element, Head | Rest ]):- Element >= Head,
+push_desc([ Edge, Cost ], [ [ Edge1, Cost1 ] | Rest ], [ [ Edge, Cost], [ Edge1, Cost1] | Rest ]):- 
+	Cost >= Cost1,
 	!.
-push_desc(Element, [ Head | Rest ], [ Head | Result ]):- Element < Head,
-	push_desc(Element, Rest, Result),
+push_desc([ Edge, Cost ], [ [ Edge1, Cost1 ] | Rest ], [ [ Edge1 , Cost1 ] | Result ]):- 
+	Cost < Cost1,
+	push_desc([ Edge, Cost ], Rest, Result),
 	!.
 
 % Check if structure is empty
