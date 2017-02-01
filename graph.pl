@@ -7,6 +7,11 @@ read_edge(OldGraph, NewGraph):-
 	read(To),
 	read(Cost),
 	add_in_graph(From, To, Cost, OldGraph, NewGraph).
+read_edge_from_stream(Stream, OldGraph, NewGraph):-
+	read(Stream, From),
+	read(Stream, To),
+	read(Stream, Cost),
+	add_in_graph(From, To, Cost, OldGraph, NewGraph).
 add_in_graph(From, To, Cost, OldGraph, NewGraph):-
 	length(OldGraph, Length),
 	From < Length,
@@ -26,6 +31,13 @@ read_edges(N, OldGraph, NewGraph):-
 	N1 is N - 1,
 	read_edge(OldGraph, NewGraph1),
 	read_edges(N1, NewGraph1, NewGraph),
+	!.
+read_edges_from_stream(0, _, OldGraph, OldGraph):- !.
+read_edges_from_stream(N, Stream, OldGraph, NewGraph):-
+	N > 0,
+	N1 is N - 1,
+	read_edge_from_stream(Stream, OldGraph, NewGraph1),
+	read_edges_from_stream(N1, Stream, NewGraph1, NewGraph),
 	!.
 
 % Initialize empty graph
