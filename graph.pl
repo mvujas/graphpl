@@ -180,7 +180,7 @@ call_dijkstra(Graph, Start, End, Distance):-
 	nth0(Start, Graph, StartNode),
 	push_whole_in_pqueue(StartNode, PQueue, PQueue1),
 	(dijkstra(Graph, End, Visited, PQueue1, Distance),
-	write('Shortest path between nodes '),
+	write('The shortest path between nodes '),
 	write(Start),
 	write(' and '),
 	write(End),
