@@ -1,2 +1,2 @@
 # graphpl
-Expression of graphs and some basic algorithms on them in Prolog
+Implementation of graphs and some basic algorithms with them in Prolog
